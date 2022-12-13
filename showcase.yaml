@@ -3,12 +3,12 @@ type: runtime
 startup: |
   go mod download
   go build -o main
-  # mysql -u ${DB_USERNAME} -p${DB_PASSWORD} < ./sql/db.sql  
+  # mysql -u ${DB_USERNAME} -p${DB_PASSWORD} < ./sql/db.sql
 entrypoint: ./main -d
 
 http_proxy: 8080
 cname:
-  hackathon-22-spring-11.trap.games
+  marqov.trap.games
 
 https: on
 use_mariadb: true
