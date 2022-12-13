@@ -3,7 +3,7 @@ package model
 import "context"
 
 type Problem struct {
-	ID        int64  `json:"id" db:"id"`
+	ID        string `json:"id" db:"id"`
 	CreatorID string `json:"creatorId" db:"creator_id"`
 	Score     int    `json:"score" db:"score"`
 	Title     string `json:"title" db:"title"`
