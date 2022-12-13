@@ -29,7 +29,7 @@ func connectDB(batch bool) (*sqlx.DB, error) {
 	pass := utils.GetEnv("DB_PASSWORD", "password")
 	host := utils.GetEnv("DB_HOST", "localhost")
 	port := utils.GetEnv("DB_PORT", "3306")
-	dbname := utils.GetEnv("DB_NAME", "waiwai")
+	dbname := utils.GetEnv("DB_NAME", "bocchi")
 
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=%s&multiStatements=%t&interpolateParams=true",
