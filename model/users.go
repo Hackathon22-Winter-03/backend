@@ -5,6 +5,7 @@ import "context"
 type User struct {
 	ID        string `json:"id" db:"id"`
 	Name      string `json:"name" db:"name"`
+	Comment   string `json:"comment" db:"comment"`
 	Score     int    `json:"score" db:"score"`
 	CreatedAt int64  `json:"createdAt" db:"created_at"`
 	UpdatedAt int64  `json:"updatedAt" db:"updated_at"`
@@ -16,7 +17,7 @@ func GetUser(ctx context.Context, userID string) (User, error) {
 	err := dbx.GetContext(
 		ctx,
 		&user,
-		"SELECT `id`, `name`, `score`, `created_at`, `updated_at`, `deleted_at` "+
+		"SELECT `id`, `name`, `comment`, `score`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM users "+
 			"WHERE `id` = ?",
 		userID,
@@ -32,7 +33,7 @@ func GetUsers(ctx context.Context) ([]User, error) {
 	err := dbx.SelectContext(
 		ctx,
 		&users,
-		"SELECT `id`, `name`, `score`, `created_at`, `updated_at`, `deleted_at` "+
+		"SELECT `id`, `name`, `comment`, `score`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM users",
 	)
 	if err != nil {
