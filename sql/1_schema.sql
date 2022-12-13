@@ -16,9 +16,9 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `codes` (
-  `id` bigint NOT NULL,
+  `id` varchar(36) NOT NULL,
   `user_id` varchar(36) NOT NULL,
-  `problem_id` bigint NOT NULL,
+  `problem_id` varchar(36) NOT NULL,
   `code` text NOT NULL,
   `answer` text DEFAULT NULL,
   `created_at` bigint NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -28,7 +28,7 @@ CREATE TABLE `codes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `problems` (
-  `id` bigint NOT NULL,
+  `id` varchar(36) NOT NULL,
   `creater_id` varchar(36) NOT NULL,
   `score` bigint NOT NULL,
   `title` varchar(64) NOT NULL,
@@ -39,8 +39,8 @@ CREATE TABLE `problems` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `testcases` (
-  `id` bigint NOT NULL,
-  `problem_id` bigint NOT NULL,
+  `id` varchar(36) NOT NULL,
+  `problem_id` varchar(36) NOT NULL,
   `stdin` text NOT NULL,
   `stdout` text NOT NULL,
   PRIMARY KEY(`problem_id`)
