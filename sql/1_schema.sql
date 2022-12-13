@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `testcases`;
 CREATE TABLE `users` (
   `id` varchar(36) NOT NULL,
   `name` varchar(32) NOT NULL,
+  `comment` text NOT NULL,
   `score` bigint NOT NULL DEFAULT 0,
   `created_at` bigint NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` bigint NOT NULL DEFAULT CURRENT_TIMESTAMP,
