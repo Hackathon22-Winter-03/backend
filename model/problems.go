@@ -1,6 +1,10 @@
 package model
 
-import "context"
+import (
+	"context"
+
+	"github.com/Hackathon22-Winter-03/backend/utils"
+)
 
 type Problem struct {
 	ID        string `json:"id" db:"id"`
@@ -42,16 +46,21 @@ func GetProblem(ctx context.Context, problemID int64) (Problem, error) {
 	return p, nil
 }
 
-func TryCreateProblemHandler(ctx context.Context, creatorID string, score int, title string) (int64, error) {
-	res, err := dbx.ExecContext(
+func TryCreateProblemHandler(ctx context.Context, creatorID string, score int, title string) (string, error) {
+	id, err := utils.GenerateID()
+	if err != nil {
+		return "", err
+	}
+	_, err = dbx.ExecContext(
 		ctx,
-		"INSERT INTO problems (`creator_id`, `score`, `title`) VALUES (?, ?, ?)",
+		"INSERT INTO problems (`id`, `creator_id`, `score`, `title`) VALUES (?, ?, ?, ?)",
+		id,
 		creatorID,
 		score,
 		title,
 	)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
-	return res.LastInsertId()
+	return id, nil
 }

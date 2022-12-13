@@ -56,7 +56,7 @@ func SubmitCode(ctx context.Context, userID string, problemID int64, code string
 	}
 	_, err = dbx.ExecContext(
 		ctx,
-		"INSERT INTO codes (`id`, `user_id`, `problem_id`, `code`) VALUES (?, ?, ?)",
+		"INSERT INTO codes (`id`, `user_id`, `problem_id`, `code`) VALUES (?, ?, ?, ?)",
 		id,
 		userID,
 		problemID,
