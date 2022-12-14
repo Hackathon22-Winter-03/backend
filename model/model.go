@@ -26,7 +26,7 @@ func InitDB(e *echo.Echo) (*sqlx.DB, error) {
 
 func connectDB(batch bool) (*sqlx.DB, error) {
 	user := utils.GetEnv("DB_USER", "root")
-	pass := utils.GetEnv("DB_PASSWORD", "password")
+	pass := utils.GetEnv("DB_PASS", "password")
 	host := utils.GetEnv("DB_HOST", "localhost")
 	port := utils.GetEnv("DB_PORT", "3306")
 	dbname := utils.GetEnv("DB_NAME", "bocchi")
