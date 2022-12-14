@@ -28,7 +28,7 @@ func SetupRouting() *echo.Echo {
 	e.GET("/problems/:problemID", getProblemHandler)
 	e.GET("/problems/:problemID/codes", getCodesHandler)
 	e.GET("/problems/:problemID/codes/:codeID", getCodeHandler)
-	e.POST("/problems/:problemID/submit", submitProblemHandler)
+	e.POST("/problems/:problemID/submit", submitCodeHandler)
 
 	port := utils.GetEnv("PORT", ":3000")
 	e.Start(port)
