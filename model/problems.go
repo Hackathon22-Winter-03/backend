@@ -30,7 +30,7 @@ func GetProblems(ctx context.Context) ([]Problem, error) {
 	return problems, nil
 }
 
-func GetProblem(ctx context.Context, problemID int64) (Problem, error) {
+func GetProblem(ctx context.Context, problemID string) (Problem, error) {
 	p := Problem{}
 	err := dbx.GetContext(
 		ctx,

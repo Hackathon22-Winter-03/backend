@@ -33,15 +33,16 @@ func GetCodesFromUser(ctx context.Context, userID string) ([]Code, error) {
 	return codes, nil
 }
 
-func GetCode(ctx context.Context, codeID int64) (Code, error) {
+func GetCode(ctx context.Context, problemID string, codeID string) (Code, error) {
 	c := Code{}
 	err := dbx.GetContext(
 		ctx,
 		&c,
 		"SELECT `id`, `user_id`, `problem_id`, `code`, `answer`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM codes "+
-			"WHERE `id` = ?",
+			"WHERE `id` = ? AND `problem_id` = ?",
 		codeID,
+		problemID,
 	)
 	if err != nil {
 		return c, err
@@ -49,7 +50,7 @@ func GetCode(ctx context.Context, codeID int64) (Code, error) {
 	return c, nil
 }
 
-func SubmitCode(ctx context.Context, userID string, problemID int64, code string) (string, error) {
+func SubmitCode(ctx context.Context, userID string, problemID string, code string) (string, error) {
 	id, err := utils.GenerateID()
 	if err != nil {
 		return "IE", err
