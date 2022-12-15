@@ -8,13 +8,14 @@ import (
 )
 
 type Problem struct {
-	ID        string     `json:"id" db:"id"`
-	CreatorID string     `json:"creatorId" db:"creator_id"`
-	Score     int        `json:"score" db:"score"`
-	Title     string     `json:"title" db:"title"`
-	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
-	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
-	DeletedAt *time.Time `json:"deletedAt,omitempty" db:"deleted_at"`
+	ID        string    `json:"id" db:"id"`
+	CreatorID string    `json:"creatorId" db:"creator_id"`
+	Score     int       `json:"score" db:"score"`
+	Title     string    `json:"title" db:"title"`
+	Text      string    `json:"text" db:"text"`
+	CreatedAt time.Time `json:"createdAt" db:"created_at"`
+	UpdatedAt time.Time `json:"updatedAt" db:"updated_at"`
+	DeletedAt time.Time `json:"deletedAt,omitempty" db:"deleted_at"`
 }
 
 func GetProblems(ctx context.Context) ([]Problem, error) {

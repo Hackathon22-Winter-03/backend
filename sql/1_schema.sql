@@ -33,6 +33,7 @@ CREATE TABLE `problems` (
   `creater_id` varchar(36) NOT NULL,
   `score` bigint NOT NULL,
   `title` varchar(64) NOT NULL,
+  `text` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,
