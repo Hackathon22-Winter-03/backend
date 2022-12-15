@@ -6,7 +6,7 @@ startup: |
   go build -o main
 entrypoint: ./main -d
 
-http_proxy: 8080
+http_proxy: 3000
 cname:
   turing-qomplete.trap.games
 
