@@ -2,19 +2,20 @@ package model
 
 import (
 	"context"
+	"time"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
 )
 
 type Code struct {
-	ID        string `json:"id" db:"id"`
-	UserID    string `json:"userId" db:"user_id"`
-	ProblemID string `json:"problemId" db:"problem_id"`
-	Code      string `json:"code" db:"code"`
-	Answer    string `json:"answer" db:"answer"`
-	CreatedAt int64  `json:"createdAt" db:"created_at"`
-	UpdatedAt int64  `json:"updatedAt" db:"updated_at"`
-	DeletedAt *int64 `json:"deletedAt,omitempty" db:"deleted_at"`
+	ID        string     `json:"id" db:"id"`
+	UserID    string     `json:"userId" db:"user_id"`
+	ProblemID string     `json:"problemId" db:"problem_id"`
+	Code      string     `json:"code" db:"code"`
+	Answer    string     `json:"answer" db:"answer"`
+	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
+	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
+	DeletedAt *time.Time `json:"deletedAt,omitempty" db:"deleted_at"`
 }
 
 func GetCodesFromUser(ctx context.Context, userID string) ([]Code, error) {

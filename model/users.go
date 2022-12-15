@@ -1,15 +1,18 @@
 package model
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type User struct {
-	ID        string `json:"id" db:"id"`
-	Name      string `json:"name" db:"name"`
-	Comment   string `json:"comment" db:"comment"`
-	Score     int    `json:"score" db:"score"`
-	CreatedAt int64  `json:"createdAt" db:"created_at"`
-	UpdatedAt int64  `json:"updatedAt" db:"updated_at"`
-	DeletedAt *int64 `json:"deletedAt,omitempty" db:"deleted_at"`
+	ID        string     `json:"id" db:"id"`
+	Name      string     `json:"name" db:"name"`
+	Comment   string     `json:"comment" db:"comment"`
+	Score     int        `json:"score" db:"score"`
+	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
+	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
+	DeletedAt *time.Time `json:"deletedAt,omitempty" db:"deleted_at"`
 }
 
 func GetUser(ctx context.Context, userID string) (User, error) {
