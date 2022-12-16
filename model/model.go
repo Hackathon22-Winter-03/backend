@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/echo/v4"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
 )
@@ -13,12 +12,13 @@ var (
 	dbx *sqlx.DB
 )
 
-func InitDB(e *echo.Echo) (*sqlx.DB, error) {
+func InitDB() (*sqlx.DB, error) {
 	db, err := connectDB(false)
 	if err != nil {
-		e.Logger.Fatalf("failed to connect to db: %v", err)
+		fmt.Printf("failed to connect to db: %v", err)
 	}
 	dbx = db
+	fmt.Println(dbx)
 
 	return dbx, err
 }
