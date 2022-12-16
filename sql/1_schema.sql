@@ -30,7 +30,7 @@ CREATE TABLE `codes` (
 
 CREATE TABLE `problems` (
   `id` varchar(36) NOT NULL,
-  `creater_id` varchar(36) NOT NULL,
+  `creator_id` varchar(36) NOT NULL,
   `score` bigint NOT NULL,
   `title` varchar(64) NOT NULL,
   `text` text NOT NULL,
