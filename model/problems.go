@@ -23,7 +23,7 @@ func GetProblems(ctx context.Context) ([]Problem, error) {
 	problems := []Problem{}
 	err := dbx.Select(
 		&problems,
-		"SELECT `id`, `creator_id`, `score`, `title` "+
+		"SELECT `id` "+
 			"FROM problems",
 	)
 	if err != nil {
