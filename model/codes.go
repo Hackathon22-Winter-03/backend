@@ -67,5 +67,32 @@ func SubmitCode(ctx context.Context, userID string, problemID string, code strin
 	if err != nil {
 		return "IE", err
 	}
-	return "AC", nil
+}
+
+func ACProblems(ctx context.Context, userID string) ([]string, error) {
+	problems := []string{}
+	err := dbx.SelectContext(
+		ctx,
+		&problems,
+		"SELECT `problem_id` FROM codes WHERE `user_id` = ? AND `result` = 'AC'",
+		userID,
+	)
+	if err != nil {
+		return problems, err
+	}
+	return problems, nil
+}
+
+func WAProblems(ctx context.Context, userID string) ([]string, error) {
+	problems := []string{}
+	err := dbx.SelectContext(
+		ctx,
+		&problems,
+		"SELECT `problem_id` FROM codes WHERE `user_id` = ? AND `result` = 'WA'",
+		userID,
+	)
+	if err != nil {
+		return problems, err
+	}
+	return problems, nil
 }

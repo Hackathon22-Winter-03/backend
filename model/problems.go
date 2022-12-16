@@ -22,6 +22,7 @@ type ProblemAggregate struct {
 	ID          string     `json:"id" db:"id"`
 	CreatorID   string     `json:"creatorId" db:"creator_id"`
 	CreatorName string     `json:"creatorName" db:"creator_name"`
+	Result      string     `json:"result" db:"result"`
 	Score       int        `json:"score" db:"score"`
 	Title       string     `json:"title" db:"title"`
 	Text        string     `json:"text" db:"text"`
@@ -45,7 +46,7 @@ func GetProblems(ctx context.Context) ([]ProblemAggregate, error) {
 	return problems, nil
 }
 
-func GetProblemsAggregate(ctx context.Context) ([]ProblemAggregate, error) {
+func GetProblemsByUser(ctx context.Context, userID string) ([]ProblemAggregate, error) {
 	problems := []ProblemAggregate{}
 	err := dbx.SelectContext(
 		ctx,
@@ -57,6 +58,28 @@ func GetProblemsAggregate(ctx context.Context) ([]ProblemAggregate, error) {
 	if err != nil {
 		return problems, err
 	}
+
+	problemsDict := map[string]*ProblemAggregate{}
+	for _, problem := range problems {
+		problemsDict[problem.ID] = &problem
+	}
+
+	ac_problems, err := ACProblems(ctx, userID)
+	if err != nil {
+		return problems, err
+	}
+	for _, problem := range ac_problems {
+		problemsDict[problem].Result = "AC"
+	}
+
+	wa_problems, err := WAProblems(ctx, userID)
+	if err != nil {
+		return problems, err
+	}
+	for _, problem := range wa_problems {
+		problemsDict[problem].Result = "WA"
+	}
+
 	return problems, nil
 }
 
