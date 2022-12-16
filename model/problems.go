@@ -50,7 +50,7 @@ func GetProblemsAggregate(ctx context.Context) ([]ProblemAggregate, error) {
 	err := dbx.SelectContext(
 		ctx,
 		&problems,
-		"SELECT `id`, `creator_id`, `creator_name` as users.name, `score`, `title`, `text`, `created_at`, `updated_at`, `deleted_at` "+
+		"SELECT `id`, `creator_id`, users.name as `creator_name`, `score`, `title`, `text`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM problems"+
 			"JOIN users ON users.id = problems.creator_id",
 	)
@@ -60,34 +60,36 @@ func GetProblemsAggregate(ctx context.Context) ([]ProblemAggregate, error) {
 	return problems, nil
 }
 
-func GetProblem(ctx context.Context, problemID string) (Problem, error) {
-	p := Problem{}
+func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error) {
+	problem := ProblemAggregate{}
 	err := dbx.GetContext(
 		ctx,
-		&p,
-		"SELECT `id`, `creator_id`, `score`, `title`, `created_at`, `updated_at`, `deleted_at` "+
+		&problem,
+		"SELECT `id`, `creator_id`, users.name as `creator_name`, `score`, `title`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM problems "+
-			"WHERE `id` = ?",
+			"WHERE `id` = ?"+
+			"JOIN users ON users.id = problems.creator_id",
 		problemID,
 	)
 	if err != nil {
-		return p, err
+		return problem, err
 	}
-	return p, nil
+	return problem, nil
 }
 
-func TryCreateProblemHandler(ctx context.Context, creatorID string, score int, title string) (string, error) {
+func TryCreateProblemHandler(ctx context.Context, creatorID string, score int, title string, text string) (string, error) {
 	id, err := utils.GenerateID()
 	if err != nil {
 		return "", err
 	}
 	_, err = dbx.ExecContext(
 		ctx,
-		"INSERT INTO problems (`id`, `creator_id`, `score`, `title`) VALUES (?, ?, ?, ?)",
+		"INSERT INTO problems (`id`, `creator_id`, `score`, `title`, `text`) VALUES (?, ?, ?, ?, ?)",
 		id,
 		creatorID,
 		score,
 		title,
+		text,
 	)
 	if err != nil {
 		return "", err
