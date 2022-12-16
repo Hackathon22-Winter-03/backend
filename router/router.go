@@ -23,6 +23,7 @@ func SetupRouting() (*echo.Echo, error) {
 	e.GET("/ping", pingHandler)
 	e.GET("/echo", echoHandler)
 	e.GET("/users", getUsersHandler)
+	e.POST("/users", postUserHandler)
 	e.GET("/users/:userID", getUserHandler)
 	e.GET("/problems", getProblemsHandler)
 	e.GET("/problems/:problemID", getProblemHandler)
