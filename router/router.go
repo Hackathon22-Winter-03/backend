@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func SetupRouting() *echo.Echo {
+func SetupRouting() (*echo.Echo, error) {
 	e := echo.New()
 
 	e.Use(middleware.Recover())
@@ -31,9 +31,12 @@ func SetupRouting() *echo.Echo {
 	e.POST("/problems/:problemID/submit", submitCodeHandler)
 
 	port := utils.GetEnv("PORT", ":3000")
-	e.Start(port)
+	err := e.Start(port)
+	if err != nil {
+		return nil, err
+	}
 
-	return e
+	return e, nil
 }
 
 func pingHandler(c echo.Context) error {

@@ -7,11 +7,11 @@ import (
 )
 
 func GetEnv(key, defaultVal string) string {
-	if v := os.Getenv(key); v == "" {
+	v := os.Getenv(key)
+	if v == "" {
 		return defaultVal
-	} else {
-		return v
 	}
+	return v
 }
 
 // generateID uniqueなIDを生成する
