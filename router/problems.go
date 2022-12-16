@@ -9,7 +9,8 @@ import (
 
 // GET /problems
 func getProblemsHandler(c echo.Context) error {
-	problems, err := model.GetProblemsAggregate(c.Request().Context())
+	userID := c.FormValue("userID")
+	problems, err := model.GetProblemsByUser(c.Request().Context(), userID)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -32,8 +33,9 @@ func getProblemHandler(c echo.Context) error {
 // GET /problems/:problemID/codes
 func getCodesHandler(c echo.Context) error {
 	problemID := c.Param("problemID")
+	userID := c.FormValue("userID")
 
-	codes, err := model.GetCodesFromUser(c.Request().Context(), problemID)
+	codes, err := model.GetCodes(c.Request().Context(), userID, problemID)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
