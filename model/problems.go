@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
@@ -20,6 +21,7 @@ type Problem struct {
 }
 
 func GetProblems(ctx context.Context) ([]Problem, error) {
+	fmt.Println(dbx)
 	problems := []Problem{}
 	err := dbx.Select(
 		&problems,
