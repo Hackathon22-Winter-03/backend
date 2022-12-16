@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
@@ -67,6 +68,9 @@ func GetCode(ctx context.Context, problemID string, codeID string) (Code, error)
 		problemID,
 	)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return c, utils.ErrNotFound
+		}
 		return c, err
 	}
 	return c, nil

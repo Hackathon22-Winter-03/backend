@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Hackathon22-Winter-03/backend/model"
+	"github.com/Hackathon22-Winter-03/backend/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -68,6 +69,9 @@ func getCodeHandler(c echo.Context) error {
 	}
 
 	code, err := model.GetCode(c.Request().Context(), problemID, codeID)
+	if err == utils.ErrNotFound {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
