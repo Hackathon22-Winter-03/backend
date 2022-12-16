@@ -41,7 +41,7 @@ func connectDB(batch bool) (*sqlx.DB, error) {
 		"Asia%2FTokyo",
 		batch,
 	)
-	dbx, err := sqlx.Open("mariadb", dsn)
+	dbx, err := sqlx.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	}
