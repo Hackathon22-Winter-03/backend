@@ -21,7 +21,7 @@ CREATE TABLE `codes` (
   `user_id` varchar(36) NOT NULL,
   `problem_id` varchar(36) NOT NULL,
   `code` text NOT NULL,
-  `answer` text DEFAULT NULL,
+  `result` text DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE `problems` (
 CREATE TABLE `testcases` (
   `id` varchar(36) NOT NULL,
   `problem_id` varchar(36) NOT NULL,
-  `stdin` text NOT NULL,
-  `stdout` text NOT NULL,
+  `input` text NOT NULL,
+  `output` text NOT NULL,
   PRIMARY KEY(`problem_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

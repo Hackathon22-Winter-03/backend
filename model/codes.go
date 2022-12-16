@@ -12,7 +12,7 @@ type Code struct {
 	UserID    string     `json:"userId" db:"user_id"`
 	ProblemID string     `json:"problemId" db:"problem_id"`
 	Code      string     `json:"code" db:"code"`
-	Answer    string     `json:"answer" db:"answer"`
+	Result    string     `json:"result" db:"result"`
 	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
 	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
 	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
@@ -23,7 +23,7 @@ func GetCodesFromUser(ctx context.Context, userID string) ([]Code, error) {
 	err := dbx.SelectContext(
 		ctx,
 		&codes,
-		"SELECT `id`, `user_id`, `problem_id`, `code`, `answer`, `created_at`, `updated_at`, `deleted_at` "+
+		"SELECT `id`, `user_id`, `problem_id`, `code`, `result`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM codes "+
 			"WHERE `user_id` = ?",
 		userID,
@@ -39,7 +39,7 @@ func GetCode(ctx context.Context, problemID string, codeID string) (Code, error)
 	err := dbx.GetContext(
 		ctx,
 		&c,
-		"SELECT `id`, `user_id`, `problem_id`, `code`, `answer`, `created_at`, `updated_at`, `deleted_at` "+
+		"SELECT `id`, `user_id`, `problem_id`, `code`, `result`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM codes "+
 			"WHERE `id` = ? AND `problem_id` = ?",
 		codeID,
