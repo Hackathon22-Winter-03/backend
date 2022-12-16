@@ -14,11 +14,11 @@ var (
 )
 
 func InitDB(e *echo.Echo) (*sqlx.DB, error) {
-	dbx, err := connectDB(false)
+	db, err := connectDB(false)
 	if err != nil {
 		e.Logger.Fatalf("failed to connect to db: %v", err)
 	}
-	defer dbx.Close()
+	dbx = db
 
 	return dbx, err
 }
