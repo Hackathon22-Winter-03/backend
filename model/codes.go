@@ -38,15 +38,16 @@ type Testcase struct {
 	Output    string `json:"output" db:"output"`
 }
 
-func GetCodesFromUser(ctx context.Context, userID string) ([]Code, error) {
+func GetCodes(ctx context.Context, userID string, problemID string) ([]Code, error) {
 	codes := []Code{}
 	err := dbx.SelectContext(
 		ctx,
 		&codes,
 		"SELECT `id`, `user_id`, `problem_id`, `code`, `result`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM codes "+
-			"WHERE `user_id` = ?",
+			"WHERE `user_id` = ? AND `problem_id` = ?",
 		userID,
+		problemID,
 	)
 	if err != nil {
 		return codes, err
