@@ -90,8 +90,8 @@ func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error)
 		&problem,
 		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
 			"FROM problems as p "+
-			"WHERE `id` = ? "+
-			"JOIN users as u ON u.id = p.creator_id",
+			"JOIN users as u ON u.id = p.creator_id "+
+			"WHERE p.`id` = ?",
 		problemID,
 	)
 	if err != nil {
