@@ -3,7 +3,6 @@ package model
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
@@ -20,13 +19,40 @@ type Problem struct {
 	DeletedAt sql.NullTime `json:"deletedAt" db:"deleted_at"`
 }
 
+type ProblemAggregate struct {
+	ID          string       `json:"id" db:"id"`
+	CreatorID   string       `json:"creatorId" db:"creator_id"`
+	CreatorName string       `json:"creatorName" db:"creator_name"`
+	Score       int          `json:"score" db:"score"`
+	Title       string       `json:"title" db:"title"`
+	Text        string       `json:"text" db:"text"`
+	CreatedAt   time.Time    `json:"createdAt" db:"created_at"`
+	UpdatedAt   time.Time    `json:"updatedAt" db:"updated_at"`
+	DeletedAt   sql.NullTime `json:"deletedAt" db:"deleted_at"`
+}
+
 func GetProblems(ctx context.Context) ([]Problem, error) {
-	fmt.Println(dbx)
 	problems := []Problem{}
-	err := dbx.Select(
+	err := dbx.SelectContext(
+		ctx,
 		&problems,
-		"SELECT `id` "+
+		"SELECT `id`, `creator_id`, `score`, `title`, `text`, `created_at`, `updated_at`, `deleted_at` "+
 			"FROM problems",
+	)
+	if err != nil {
+		return problems, err
+	}
+	return problems, nil
+}
+
+func GetProblemsAggregate(ctx context.Context) ([]ProblemAggregate, error) {
+	problems := []ProblemAggregate{}
+	err := dbx.SelectContext(
+		ctx,
+		&problems,
+		"SELECT `id`, `creator_id`, `creator_name` as users.name, `score`, `title`, `text`, `created_at`, `updated_at`, `deleted_at` "+
+			"FROM problems"+
+			"JOIN users ON users.id = problems.creator_id",
 	)
 	if err != nil {
 		return problems, err
