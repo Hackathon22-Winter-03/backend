@@ -9,7 +9,8 @@ import (
 
 // GET /problems
 func getProblemsHandler(c echo.Context) error {
-	problems, err := model.GetProblemsAggregate(c.Request().Context())
+	userID := c.FormValue("userID")
+	problems, err := model.GetProblemsByUser(c.Request().Context(), userID)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())

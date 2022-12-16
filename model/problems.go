@@ -30,13 +30,14 @@ type ProblemAggregate struct {
 	DeletedAt   *time.Time `json:"deletedAt" db:"deleted_at"`
 }
 
-func GetProblems(ctx context.Context) ([]Problem, error) {
-	problems := []Problem{}
+func GetProblems(ctx context.Context) ([]ProblemAggregate, error) {
+	problems := []ProblemAggregate{}
 	err := dbx.SelectContext(
 		ctx,
 		&problems,
-		"SELECT `id`, `creator_id`, `score`, `title`, `text`, `created_at`, `updated_at`, `deleted_at` "+
-			"FROM problems",
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+			"FROM problems as p "+
+			"JOIN users as u ON u.id = p.creator_id",
 	)
 	if err != nil {
 		return problems, err
