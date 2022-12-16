@@ -50,9 +50,9 @@ func GetProblemsAggregate(ctx context.Context) ([]ProblemAggregate, error) {
 	err := dbx.SelectContext(
 		ctx,
 		&problems,
-		"SELECT `id`, `creator_id`, users.name as `creator_name`, `score`, `title`, `text`, `created_at`, `updated_at`, `deleted_at` "+
-			"FROM problems"+
-			"JOIN users ON users.id = problems.creator_id",
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+			"FROM problems as p"+
+			"JOIN users as u ON u.id = p.creator_id",
 	)
 	if err != nil {
 		return problems, err
@@ -65,10 +65,10 @@ func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error)
 	err := dbx.GetContext(
 		ctx,
 		&problem,
-		"SELECT `id`, `creator_id`, users.name as `creator_name`, `score`, `title`, `created_at`, `updated_at`, `deleted_at` "+
-			"FROM problems "+
-			"WHERE `id` = ?"+
-			"JOIN users ON users.id = problems.creator_id",
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+			"FROM problems as p"+
+			"WHERE `id` = ? "+
+			"JOIN users as u ON u.id = p.creator_id",
 		problemID,
 	)
 	if err != nil {
