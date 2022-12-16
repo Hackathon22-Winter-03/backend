@@ -18,6 +18,26 @@ type Code struct {
 	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
 }
 
+type CodeAggregate struct {
+	ID          string     `json:"id" db:"id"`
+	UserID      string     `json:"userId" db:"user_id"`
+	UserName    string     `json:"userName" db:"user_name"`
+	ProblemID   string     `json:"problemId" db:"problem_id"`
+	ProblemName string     `json:"problemName" db:"problem_name"`
+	Code        string     `json:"code" db:"code"`
+	Result      string     `json:"result" db:"result"`
+	CreatedAt   time.Time  `json:"createdAt" db:"created_at"`
+	UpdatedAt   time.Time  `json:"updatedAt" db:"updated_at"`
+	DeletedAt   *time.Time `json:"deletedAt" db:"deleted_at"`
+}
+
+type Testcase struct {
+	ID        string `json:"id" db:"id"`
+	ProblemID string `json:"problemId" db:"problem_id"`
+	Input     string `json:"input" db:"input"`
+	Output    string `json:"output" db:"output"`
+}
+
 func GetCodesFromUser(ctx context.Context, userID string) ([]Code, error) {
 	codes := []Code{}
 	err := dbx.SelectContext(
@@ -67,6 +87,29 @@ func SubmitCode(ctx context.Context, userID string, problemID string, code strin
 	if err != nil {
 		return "IE", err
 	}
+
+	result := executeCode(ctx, problemID, code)
+	return result, nil
+}
+
+func executeCode(ctx context.Context, problemID string, code string) string {
+	testcases := []Testcase{}
+	err := dbx.SelectContext(
+		ctx,
+		&testcases,
+		"SELECT `id`, `problem_id`, `input`, `output` FROM testcases WHERE `problem_id` = ?",
+		problemID,
+	)
+	if err != nil {
+		return "IE"
+	}
+
+	// Rust FFI
+	// for _, testcase := range testcases {
+	// 	if (executeCode(code, testcase.input) == testcase.output) continue
+	// 	else return "WA", nil
+	// }
+	return "AC"
 }
 
 func ACProblems(ctx context.Context, userID string) ([]string, error) {
