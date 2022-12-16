@@ -20,8 +20,49 @@ pub struct Markov {
 }
 
 impl Markov {
-    pub fn new(rules: Vec<Rule>) -> Self {
-        Markov { rules }
+    pub fn new(code: &str) -> Result<Self, &str> {
+        match Markov::parse(code) {
+            Ok(rules) => Ok(Markov { rules }),
+            Err(msg) => Err(msg),
+        }
+    }
+
+    fn parse(code: &str) -> Result<Vec<Rule>, &str> {
+        let code_chars: Vec<char> = code.chars().collect();
+        let mut rules = vec![];
+        let mut i = 0 as usize;
+        while i < code_chars.len() {
+            let mut before = vec![];
+            let mut after = vec![];
+            let is_terminate;
+            
+            while i < code_chars.len() && code_chars[i] != ':' {
+                before.push(code_chars[i]);
+                i += 1;
+            }
+
+            if i < code_chars.len() && code_chars[i] == ':' {
+                if i + 1 < code_chars.len() && code_chars[i+1] == ':' {
+                    is_terminate = true;
+                    i += 2;
+                } else {
+                    is_terminate = false;
+                    i += 1;
+                }   
+            } else {
+                return Err("Syntax Error");
+            }
+
+            while i < code_chars.len() && code_chars[i] != '\n' {
+                after.push(code_chars[i]);
+                i += 1;
+            }
+
+            rules.push(Rule { before, after, is_terminate });
+
+            i += 1;
+        }
+        return Ok(rules);
     }
 
     pub fn compute(&self, input: &str) -> Vec<char> {
