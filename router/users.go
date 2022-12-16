@@ -20,6 +20,9 @@ func getUsersHandler(c echo.Context) error {
 // GET /users/:userID
 func getUserHandler(c echo.Context) error {
 	userID := c.Param("userID")
+	if userID == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
+	}
 
 	user, err := model.GetUser(c.Request().Context(), userID)
 
@@ -32,7 +35,6 @@ func getUserHandler(c echo.Context) error {
 // POST /users
 func postUserHandler(c echo.Context) error {
 	user := model.User{}
-
 	if err := c.Bind(&user); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
