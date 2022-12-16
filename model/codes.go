@@ -73,23 +73,24 @@ func GetCode(ctx context.Context, problemID string, codeID string) (Code, error)
 }
 
 func SubmitCode(ctx context.Context, userID string, problemID string, code string) (string, error) {
+	result := executeCode(ctx, problemID, code)
+
 	id, err := utils.GenerateID()
 	if err != nil {
 		return "IE", err
 	}
 	_, err = dbx.ExecContext(
 		ctx,
-		"INSERT INTO codes (`id`, `user_id`, `problem_id`, `code`) VALUES (?, ?, ?, ?)",
+		"INSERT INTO codes (`id`, `user_id`, `problem_id`, `code`, `result`) VALUES (?, ?, ?, ?, ?)",
 		id,
 		userID,
 		problemID,
 		code,
+		result,
 	)
 	if err != nil {
 		return "IE", err
 	}
-
-	result := executeCode(ctx, problemID, code)
 	return result, nil
 }
 
