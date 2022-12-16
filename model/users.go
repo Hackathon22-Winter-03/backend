@@ -44,3 +44,17 @@ func GetUsers(ctx context.Context) ([]User, error) {
 	}
 	return users, nil
 }
+
+func CreateUser(ctx context.Context, userID string, name string, comment string) error {
+	_, err := dbx.ExecContext(
+		ctx,
+		"INSERT INTO users (`id`, `name`, `comment`, `score`) VALUES (?, ?, ?, 0)",
+		userID,
+		name,
+		comment,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}

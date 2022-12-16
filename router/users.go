@@ -28,3 +28,17 @@ func getUserHandler(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, user)
 }
+
+// POST /users
+func postUserHandler(c echo.Context) error {
+	user := model.User{}
+
+	if err := c.Bind(&user); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := model.CreateUser(c.Request().Context(), user.ID, user.Name, user.Comment); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusCreated, user)
+}
