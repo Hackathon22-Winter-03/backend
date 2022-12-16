@@ -1,0 +1,1 @@
+char* rustaceanize(char *code, char *input);

@@ -1,8 +1,11 @@
 package model
 
+import "C"
+
 import (
 	"context"
 	"time"
+	"unsafe"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
 )
@@ -107,6 +110,12 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	}
 
 	// Rust FFI
+	code := C.CString("woman:W\nman:M\nMW:\nWM:\n")
+	input := C.CString("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman")
+	defer C.free(unsafe.Pointer(code))
+	defer C.free(unsafe.Pointer(input))
+
+	output := C.GoString(C.rustaceanize(code, input))
 	// for _, testcase := range testcases {
 	// 	if (executeCode(code, testcase.input) == testcase.output) continue
 	// 	else return "WA", nil
