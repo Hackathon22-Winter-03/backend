@@ -6,9 +6,9 @@ import (
 )
 
 type User struct {
-	ID        string     `json:"id" db:"id"`
-	Name      string     `json:"name" db:"name"`
-	Comment   string     `json:"comment" db:"comment"`
+	ID        string     `json:"id" db:"id" form:"id"`
+	Name      string     `json:"name" db:"name" form:"name"`
+	Comment   string     `json:"comment" db:"comment" form:"comment"`
 	Score     int        `json:"score" db:"score"`
 	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
 	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`

@@ -40,5 +40,5 @@ func postUserHandler(c echo.Context) error {
 	if err := model.CreateUser(c.Request().Context(), user.ID, user.Name, user.Comment); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, user)
+	return c.JSON(http.StatusCreated, nil)
 }
