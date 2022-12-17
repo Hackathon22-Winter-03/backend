@@ -10,3 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 libc = "0.2.2"
+
+[[bin]]
+name = "lib"
+path = "src/lib.rs"

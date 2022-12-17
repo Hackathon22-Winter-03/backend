@@ -24,18 +24,14 @@ pub extern "C" fn simulate_markov(code: *const libc::c_char, input: *const libc:
     }
 }
 
-// fn main() {
-//     // let markov = Markov::new(vec![
-//     //     Rule::new("woman", "W", false),
-//     //     Rule::new("man", "M", false),
-//     //     Rule::new("MW", "", false),
-//     //     Rule::new("WM", "", false),
-//     // ]);
-//     match Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
-//         Ok(markov) => {
-//             println!("{:?}", markov.compute("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman"));
-//         },
-//         Err(msg) => {},
-//     }
-    
-// }
+fn main() {
+    // let markov = Markov::new(vec![
+    //     Rule::new("woman", "W", false),
+    //     Rule::new("man", "M", false),
+    //     Rule::new("MW", "", false),
+    //     Rule::new("WM", "", false),
+    // ]);
+    if let Ok(markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
+        println!("{:?}", markov.compute("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman"));
+    }
+}
