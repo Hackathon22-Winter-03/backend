@@ -120,11 +120,13 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	// Rust FFI
 	cstr_code := C.CString(code)
 	defer C.free(unsafe.Pointer(cstr_code))
+	// cstr_lang := C.CString(language)
+	// defer C.free(unsafe.Pointer(cstr_lang))
 
 	for _, testcase := range testcases {
 		cstr_input := C.CString(testcase.Input)
 		defer C.free(unsafe.Pointer(cstr_input))
-		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.Output {
+		if C.GoString(C.simulate(cstr_code, cstr_input, /* cstr_lang */)) == testcase.Output {
 			continue
 		} else {
 			return "WA"
@@ -142,7 +144,7 @@ func StepExecute(ctx context.Context, code string, state string, language string
 	cstr_lang := C.CString(language)
 	defer C.free(unsafe.Pointer(cstr_lang))
 
-	return C.GoString(C.step_execute_markov(cstr_code, cstr_state, cstr_lang)), nil
+	return C.GoString(C.step_execute(cstr_code, cstr_state, cstr_lang)), nil
 }
 
 func ACProblems(ctx context.Context, userID string) ([]string, error) {

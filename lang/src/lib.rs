@@ -6,7 +6,7 @@ use std::ffi::{CStr, CString};
 use crate::markov::*;
 
 #[no_mangle]
-pub extern "C" fn simulate_markov(code: *const libc::c_char, input: *const libc::c_char) -> *const libc::c_char {
+pub extern "C" fn simulate(code: *const libc::c_char, input: *const libc::c_char) -> *const libc::c_char {
     let cstr_code = unsafe { CStr::from_ptr(code) };
     let cstr_input = unsafe { CStr::from_ptr(input) };
     let str_code = cstr_code.to_str().unwrap();
@@ -26,11 +26,14 @@ pub extern "C" fn simulate_markov(code: *const libc::c_char, input: *const libc:
 }
 
 #[no_mangle]
-pub extern "C" fn step_execute_markov(code: *const libc::c_char, input: *const libc::c_char, lang: *const libc::c_char) -> *const libc::c_char {
+pub extern "C" fn step_execute(code: *const libc::c_char, input: *const libc::c_char, model: *const libc::c_char) -> *const libc::c_char {
     let cstr_code = unsafe { CStr::from_ptr(code) };
     let cstr_input = unsafe { CStr::from_ptr(input) };
+    let cstr_model = unsafe { CStr::from_ptr(model) };
+
     let str_code = cstr_code.to_str().unwrap();
     let str_input = cstr_input.to_str().unwrap();
+    let str_model = cstr_model.to_str().unwrap();
 
     let str_output;
     match Markov::new(str_code) {
