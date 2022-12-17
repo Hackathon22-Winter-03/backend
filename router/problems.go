@@ -10,12 +10,15 @@ import (
 
 // GET /problems
 func getProblemsHandler(c echo.Context) error {
-	userID := c.FormValue("userID")
-	if userID == "" {
+	userID, err := c.Cookie("userID")
+	if err != nil {
+		return err
+	}
+	if userID.Value == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
 	}
 
-	problems, err := model.GetProblemsByUser(c.Request().Context(), userID)
+	problems, err := model.GetProblemsByUser(c.Request().Context(), userID.Value)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
