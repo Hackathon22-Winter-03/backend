@@ -15,9 +15,9 @@ func SetupRouting() (*echo.Echo, error) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"localhost:5173"},
+		AllowOrigins: []string{"http://localhost:5173", "https://hackathon22-winter-03.trap.jp"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost},
-		AllowHeaders: []string{"Content-Type", "x-master-version", "x-session"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, "x-master-version", "x-session"},
 	}))
 
 	e.GET("/api/ping", pingHandler)
