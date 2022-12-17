@@ -17,12 +17,13 @@ impl Rule {
 
 pub struct Markov {
     rules: Vec<Rule>,
+    text: Vec<char>,
 }
 
 impl Markov {
     pub fn new(code: &str) -> Result<Self, &str> {
         match Markov::parse(code) {
-            Ok(rules) => Ok(Markov { rules }),
+            Ok(rules) => Ok(Markov { rules: rules, text: Vec::<char>::new() }),
             Err(msg) => Err(msg),
         }
     }
@@ -65,58 +66,51 @@ impl Markov {
         return Ok(rules);
     }
 
-    pub fn compute(&self, input: &str) -> Vec<char> {
-        let mut cur_text: Vec<char> = input.chars().collect();
+    pub fn set_text(&mut self, text: &str) {
+        self.text = text.chars().collect();
+    }
 
+    pub fn run(&mut self) -> Vec<char> {
         loop {
-            let mut some_rule_match = false;
-            for rule in self.rules.clone() {
-                let mut pattern_match = true; // for matching an empty string
+            let (next_text, is_terminate) = self.step();
+            if is_terminate {
+                return next_text;
+            } else {
+                self.text = next_text;
+            }
+        }
+    }
 
-                if cur_text.len() < rule.before.len() {
-                    continue;
-                }
-                for i in (0 as usize)..((cur_text.len() - rule.before.len() + 1) as usize) {
-                    pattern_match = true;
-                    for j in (0 as usize)..(rule.before.len() as usize) {
-                        if cur_text[i + j] != rule.before[j] {
-                            pattern_match = false;
-                            break;
-                        }
-                    }
+    pub fn step(&mut self) -> (Vec<char>, bool) {
+        for rule in self.rules.clone() {
+            if self.text.len() < rule.before.len() {
+                continue;
+            }
 
-                    if pattern_match {//println!("ok");
-                        some_rule_match = true;
-                        let mut next_text: Vec<char> = vec![];
-                        for j in 0..i {
-                            next_text.push(cur_text[j]);
-                        }
-                        for c in rule.after {
-                            next_text.push(c);
-                        }
-                        for j in i + rule.before.len()..cur_text.len() {
-                            next_text.push(cur_text[j]);
-                        }
-                        cur_text = next_text;
-
-                        if rule.is_terminate {
-                            return cur_text;
-                        }
-
+            for i in (0 as usize)..((self.text.len() - rule.before.len() + 1) as usize) {
+                let mut pattern_match = true;
+                for j in (0 as usize)..(rule.before.len() as usize) {
+                    if self.text[i + j] != rule.before[j] {
+                        pattern_match = false;
                         break;
                     }
                 }
 
                 if pattern_match {
-                    break;
+                    let mut next_text: Vec<char> = vec![];
+                    for j in 0..i {
+                        next_text.push(self.text[j]);
+                    }
+                    for c in rule.after {
+                        next_text.push(c);
+                    }
+                    for j in i + rule.before.len()..self.text.len() {
+                        next_text.push(self.text[j]);
+                    }
+                    return (next_text, rule.is_terminate);
                 }
             }
-
-            if !some_rule_match {
-                break;
-            }
         }
-
-        return cur_text;
+        return (self.text.clone(), true);
     }
 }

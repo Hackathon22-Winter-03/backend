@@ -32,6 +32,7 @@ func SetupRouting() (*echo.Echo, error) {
 	e.POST("/api/problems/:problemID/codes", getCodesHandler)
 	e.POST("/api/problems/:problemID/codes/:codeID", getCodeHandler)
 	e.POST("/api/problems/:problemID/submit", submitCodeHandler)
+	e.POST("/api/step", stepExecuteHandler) // code case
 
 	port := utils.GetEnv("PORT", ":3000")
 	err := e.Start(port)
