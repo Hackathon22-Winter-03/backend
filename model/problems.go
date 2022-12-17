@@ -2,7 +2,6 @@ package model
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
@@ -69,11 +68,9 @@ func GetProblemsByUser(ctx context.Context, userID string) ([]ProblemAggregate, 
 	if err != nil {
 		return problems, err
 	}
-	fmt.Println(ac_problems)
 	for _, problem := range ac_problems {
 		problemsDict[problem].Result = "AC"
 	}
-	fmt.Println(problems)
 
 	wa_problems, err := WAProblems(ctx, userID)
 	if err != nil {
