@@ -15,7 +15,7 @@ func SetupRouting() (*echo.Echo, error) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5173"},
+		AllowOrigins: []string{"localhost:5173"},
 		AllowMethods: []string{http.MethodGet, http.MethodPost},
 		AllowHeaders: []string{"Content-Type", "x-master-version", "x-session"},
 	}))
