@@ -123,3 +123,31 @@ func submitCodeHandler(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, nil)
 }
+
+// POST /step
+func stepExecuteHandler(c echo.Context) error {
+	code := c.FormValue("code")
+	if code == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "code is required")
+	}
+	state := c.FormValue("state")
+	if state == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "state is required")
+	}
+	problemID := c.FormValue("problemID")
+	if problemID == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "problemID is required")
+	}
+
+	problem, err := model.GetProblem(c.Request().Context(), problemID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	result, err := model.StepExecute(c.Request().Context(), code, state, problem.Language)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

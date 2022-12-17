@@ -133,6 +133,18 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	return "AC"
 }
 
+func StepExecute(ctx context.Context, code string, state string, language string) (string, error) {
+	// Rust FFI
+	cstr_code := C.CString(code)
+	defer C.free(unsafe.Pointer(cstr_code))
+	cstr_state := C.CString(state)
+	defer C.free(unsafe.Pointer(cstr_state))
+	cstr_lang := C.CString(language)
+	defer C.free(unsafe.Pointer(cstr_lang))
+
+	return C.GoString(C.step_execute_markov(cstr_code, cstr_state, cstr_lang)), nil
+}
+
 func ACProblems(ctx context.Context, userID string) ([]string, error) {
 	problems := []string{}
 	err := dbx.SelectContext(
