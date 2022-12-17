@@ -13,7 +13,7 @@ impl Parser {
         }
     }
 
-    pub fn parse<'a>(&mut self) -> Result<HashMap<(&str, char), (&str, char, char)>, &'a str> {
+    pub fn parse<'a>(&mut self) -> Result<HashMap<(String, char), (String, char, char)>, &'a str> {
         let mut rules = HashMap::new();
         while self.pos < self.chs.len() {
             if self.chs[self.pos].is_whitespace() {
@@ -50,6 +50,7 @@ impl Parser {
 
             self.pos += 1;
         }
+        // println!("{:?}", rules);
         return Ok(rules);
     }
 
@@ -63,17 +64,16 @@ impl Parser {
         }
     }
 
-    fn read_str<'a>(&mut self) -> &'a str {
-        let mut s = vec![];
+    fn read_str(&mut self) -> String {
+        let mut s = String::from("");
         while self.pos < self.chs.len() {
             if self.chs[self.pos] == ',' || self.chs[self.pos] == '(' || self.chs[self.pos] == ')' || self.chs[self.pos] == '\n' {
-                self.pos += 1;
-                return s.as_str();
+                return s;
             }
             s.push(self.chs[self.pos]);
             self.pos += 1;
         }
-        return s.as_str();
+        return s;
     }
 
     fn consume<'a>(&mut self, ch: char) -> Result<(), &'a str> {
@@ -86,42 +86,52 @@ impl Parser {
     }
 }
 
-pub struct Turing<'a> {
+pub struct Turing {
     pos: usize,
-    state: &'a str,
-    rules: HashMap<(&'a str, char), (&'a str, char, char)>,
+    state: String,
+    rules: HashMap<(String, char), (String, char, char)>,
+    tape: Vec<char>
 }
 
-impl Turing<'_> {
+impl Turing {
     pub fn new<'a>(code: &str) -> Result<Self, &'a str> {
         match Parser::new(code).parse() {
             Ok(rules) => Ok(Turing {
                 pos: 0,
-                state: "S",
-                rules: rules
+                state: String::from("S"),
+                rules: rules,
+                tape: Vec::<char>::new(),
             }),
             Err(msg) => Err(msg),
         }
     }
 
-    pub fn compute(&mut self, tape: &str) -> Vec<char> {
-        let mut tape_chars: Vec<char> = tape.chars().collect();
+    pub fn set_tape(&mut self, tape: &str) {
+        self.tape = tape.chars().collect::<Vec<char>>();
+    }
 
+    pub fn run(&mut self) -> Vec<char> {
         while self.state != "_" {
-            let input = tape_chars[self.pos];
-            
-            if let Some(&(next_state, output, dir)) = self.rules.get(&(self.state, input)) {
-                self.state = next_state;
-                tape_chars[self.pos] = output;
-                if dir == 'L' {
-                    self.pos -= 1;
-                } else if dir == 'R' {
-                    self.pos += 1;
-                }
-            } else {
-                return tape_chars;
-            }
+            self.step(); // println!("{} {:?}", self.state, self.tape);
         }
-        return tape_chars;
+        return self.tape.clone();
+    }
+    
+    pub fn step(&mut self) -> Vec<char> {
+        let input = self.tape[self.pos];
+        if let Some(t) = self.rules.get(&(self.state.clone(), input)).clone() {
+            let (next_state, output, dir) = (*t).clone();
+            self.state = next_state;
+            self.tape[self.pos] = output;
+            if dir == 'L' {
+                self.pos -= 1;
+            } else if dir == 'R' {
+                self.pos += 1;
+            }
+        } else {
+            self.state = String::from("_");
+        }
+
+        return self.tape.clone();
     }
 }
