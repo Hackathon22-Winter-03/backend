@@ -100,7 +100,7 @@ func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error)
 	return problem, nil
 }
 
-func TryCreateProblemHandler(ctx context.Context, creatorID string, score int, title string, text string) (string, error) {
+func TryCreateProblem(ctx context.Context, creatorID string, score int, title string, text string) (string, error) {
 	id, err := utils.GenerateID()
 	if err != nil {
 		return "", err

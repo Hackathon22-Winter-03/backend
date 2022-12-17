@@ -25,6 +25,26 @@ func getProblemsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, problems)
 }
 
+// POST /problems
+func tryCreateProblemHandler(c echo.Context) error {
+	userID, err := c.Cookie("userID")
+	if err != nil || userID.Value == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
+	}
+
+	problem := model.Problem{}
+	if err := c.Bind(&problem); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	id, err := model.TryCreateProblem(c.Request().Context(), userID.Value, problem.Score, problem.Title, problem.Text)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusCreated, id)
+}
+
 // GET /problems/:problemID
 func getProblemHandler(c echo.Context) error {
 	problemID := c.Param("problemID")
