@@ -11,10 +11,7 @@ import (
 // GET /problems
 func getProblemsHandler(c echo.Context) error {
 	userID, err := c.Cookie("userID")
-	if err != nil {
-		return err
-	}
-	if userID.Value == "" {
+	if err != nil || userID.Value == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
 	}
 
@@ -44,15 +41,15 @@ func getProblemHandler(c echo.Context) error {
 // GET /problems/:problemID/codes
 func getCodesHandler(c echo.Context) error {
 	problemID := c.Param("problemID")
-	userID := c.FormValue("userID")
+	userID, err := c.Cookie("userID")
 	if problemID == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "problemID is required")
 	}
-	if userID == "" {
+	if err != nil || userID.Value == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
 	}
 
-	codes, err := model.GetCodes(c.Request().Context(), userID, problemID)
+	codes, err := model.GetCodes(c.Request().Context(), userID.Value, problemID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -85,19 +82,19 @@ func getCodeHandler(c echo.Context) error {
 // POST /problems/:problemID/submit
 func submitCodeHandler(c echo.Context) error {
 	problemID := c.Param("problemID")
-	userID := c.FormValue("userID")
+	userID, err := c.Cookie("userID")
 	code := c.FormValue("code")
 	if problemID == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "problemID is required")
 	}
-	if userID == "" {
+	if err != nil || userID.Value == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
 	}
 	if code == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "code is required")
 	}
 
-	_, err := model.SubmitCode(c.Request().Context(), userID, problemID, code)
+	_, err = model.SubmitCode(c.Request().Context(), userID.Value, problemID, code)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
