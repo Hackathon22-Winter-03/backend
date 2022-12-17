@@ -1,13 +1,12 @@
 package model
 
-/*
-#cgo LDFLAGS: -L../lang -llang
-#include <stdlib.h>
-#include "../lang/simulate.h"
-*/
-import "C"
-
 import (
+	/*
+	   #cgo LDFLAGS: -L../lang -llang
+	   #include <stdlib.h>
+	   #include "../lang/simulate.h"
+	*/
+	"C"
 	"context"
 	"database/sql"
 	"time"
@@ -123,9 +122,9 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	defer C.free(unsafe.Pointer(cstr_code))
 
 	for _, testcase := range testcases {
-		cstr_input := C.CString(testcase.input)
+		cstr_input := C.CString(testcase.Input)
 		defer C.free(unsafe.Pointer(cstr_input))
-		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.output {
+		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.Output {
 			continue
 		} else {
 			return "WA"
