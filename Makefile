@@ -1,4 +1,5 @@
-ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+# ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+ROOT_DIR := /srv/
 
 build:
 	cd lang && cargo build --release
