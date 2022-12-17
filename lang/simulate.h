@@ -1,0 +1,1 @@
+char* simulate_markov(char *code, char *input);

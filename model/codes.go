@@ -3,7 +3,7 @@ package model
 /*
 #cgo LDFLAGS: -L../lang -llang
 #include <stdlib.h>
-#include "../lang/rustaceanize.h"
+#include "../lang/simulate.h"
 */
 import "C"
 
@@ -121,7 +121,7 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	for _, testcase := range testcases {
 		cstr_input := C.CString(testcase.input)
 		defer C.free(unsafe.Pointer(cstr_input))
-		if C.GoString(C.rustaceanize(cstr_code, cstr_input)) == testcase.output {
+		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.output {
 			continue
 		} else {
 			return "WA"

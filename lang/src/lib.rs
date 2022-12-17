@@ -6,7 +6,7 @@ use std::ffi::{CStr, CString};
 use crate::markov::*;
 
 #[no_mangle]
-pub extern "C" fn rustaceanize(code: *const libc::c_char, input: *const libc::c_char) -> *const libc::c_char {
+pub extern "C" fn simulate_markov(code: *const libc::c_char, input: *const libc::c_char) -> *const libc::c_char {
     let cstr_code = unsafe { CStr::from_ptr(code) };
     let cstr_input = unsafe { CStr::from_ptr(input) };
     let str_code = cstr_code.to_str().unwrap();
