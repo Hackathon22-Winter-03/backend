@@ -14,8 +14,9 @@ pub extern "C" fn simulate_markov(code: *const libc::c_char, input: *const libc:
 
     let str_output;
     match Markov::new(str_code) {
-        Ok(markov) => {
-            str_output = markov.compute(str_input);
+        Ok(mut markov) => {
+            markov.set_text(str_input);
+            str_output = markov.run();
             CString::new(str_output.into_iter().collect::<String>()).unwrap().into_raw()
         },
         Err(msg) => {
@@ -25,13 +26,8 @@ pub extern "C" fn simulate_markov(code: *const libc::c_char, input: *const libc:
 }
 
 fn main() {
-    // let markov = Markov::new(vec![
-    //     Rule::new("woman", "W", false),
-    //     Rule::new("man", "M", false),
-    //     Rule::new("MW", "", false),
-    //     Rule::new("WM", "", false),
-    // ]);
-    if let Ok(markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
-        println!("{:?}", markov.compute("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman"));
-    }
+//     if let Ok(mut markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
+//         markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
+//         println!("{:?}", markov.run());
+//     }
 }

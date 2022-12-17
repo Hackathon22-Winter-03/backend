@@ -17,12 +17,13 @@ impl Rule {
 
 pub struct Markov {
     rules: Vec<Rule>,
+    text: Vec<char>,
 }
 
 impl Markov {
     pub fn new(code: &str) -> Result<Self, &str> {
         match Markov::parse(code) {
-            Ok(rules) => Ok(Markov { rules }),
+            Ok(rules) => Ok(Markov { rules: rules, text: Vec::<char>::new() }),
             Err(msg) => Err(msg),
         }
     }
@@ -65,30 +66,32 @@ impl Markov {
         return Ok(rules);
     }
 
-    pub fn compute(&self, input: &str) -> Vec<char> {
-        let mut cur_text: Vec<char> = input.chars().collect();
-        // let mut cur_text: Vec<char> = input.chars().collect();
+    pub fn set_text(&mut self, text: &str) {
+        self.text = text.chars().collect();
+    }
+
+    pub fn run(&mut self) -> Vec<char> {
         loop {
-            let (next_text, is_terminate) = self.step(cur_text);
+            let (next_text, is_terminate) = self.step();
             println!("{:?} {}", next_text, is_terminate);
             if is_terminate {
                 return next_text;
             } else {
-                cur_text = next_text;
+                self.text = next_text;
             }
         }
     }
 
-    pub fn step(&self, cur_text: Vec<char>) -> (Vec<char>, bool) {
+    pub fn step(&mut self) -> (Vec<char>, bool) {
         for rule in self.rules.clone() {
-            if cur_text.len() < rule.before.len() {
+            if self.text.len() < rule.before.len() {
                 continue;
             }
 
-            for i in (0 as usize)..((cur_text.len() - rule.before.len() + 1) as usize) {
+            for i in (0 as usize)..((self.text.len() - rule.before.len() + 1) as usize) {
                 let mut pattern_match = true;
                 for j in (0 as usize)..(rule.before.len() as usize) {
-                    if cur_text[i + j] != rule.before[j] {
+                    if self.text[i + j] != rule.before[j] {
                         pattern_match = false;
                         break;
                     }
@@ -97,18 +100,18 @@ impl Markov {
                 if pattern_match {
                     let mut next_text: Vec<char> = vec![];
                     for j in 0..i {
-                        next_text.push(cur_text[j]);
+                        next_text.push(self.text[j]);
                     }
                     for c in rule.after {
                         next_text.push(c);
                     }
-                    for j in i + rule.before.len()..cur_text.len() {
-                        next_text.push(cur_text[j]);
+                    for j in i + rule.before.len()..self.text.len() {
+                        next_text.push(self.text[j]);
                     }
                     return (next_text, rule.is_terminate);
                 }
             }
         }
-        return (cur_text, true);
+        return (self.text.clone(), true);
     }
 }
