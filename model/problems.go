@@ -13,6 +13,7 @@ type Problem struct {
 	Score     int        `json:"score" db:"score"`
 	Title     string     `json:"title" db:"title"`
 	Text      string     `json:"text" db:"text"`
+	Language  string     `json:"language" db:"language"`
 	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
 	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
 	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
@@ -26,6 +27,7 @@ type ProblemAggregate struct {
 	Score       int        `json:"score" db:"score"`
 	Title       string     `json:"title" db:"title"`
 	Text        string     `json:"text" db:"text"`
+	Language    string     `json:"language" db:"language"`
 	CreatedAt   time.Time  `json:"createdAt" db:"created_at"`
 	UpdatedAt   time.Time  `json:"updatedAt" db:"updated_at"`
 	DeletedAt   *time.Time `json:"deletedAt" db:"deleted_at"`
@@ -36,7 +38,7 @@ func GetProblems(ctx context.Context) ([]ProblemAggregate, error) {
 	err := dbx.SelectContext(
 		ctx,
 		&problems,
-		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, `text`, `language`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
 			"FROM problems as p "+
 			"JOIN users as u ON u.id = p.creator_id",
 	)
@@ -51,7 +53,7 @@ func GetProblemsByUser(ctx context.Context, userID string) ([]ProblemAggregate, 
 	err := dbx.SelectContext(
 		ctx,
 		&problems,
-		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, `text`, `language`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
 			"FROM problems as p "+
 			"JOIN users as u ON u.id = p.creator_id",
 	)
@@ -60,8 +62,8 @@ func GetProblemsByUser(ctx context.Context, userID string) ([]ProblemAggregate, 
 	}
 
 	problemsDict := map[string]*ProblemAggregate{}
-	for _, problem := range problems {
-		problemsDict[problem.ID] = &problem
+	for i := range problems {
+		problemsDict[problems[i].ID] = &problems[i]
 	}
 
 	ac_problems, err := ACProblems(ctx, userID)
@@ -88,7 +90,7 @@ func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error)
 	err := dbx.GetContext(
 		ctx,
 		&problem,
-		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, `text`, `language`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
 			"FROM problems as p "+
 			"JOIN users as u ON u.id = p.creator_id "+
 			"WHERE p.`id` = ?",
@@ -100,19 +102,20 @@ func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error)
 	return problem, nil
 }
 
-func TryCreateProblemHandler(ctx context.Context, creatorID string, score int, title string, text string) (string, error) {
+func TryCreateProblem(ctx context.Context, creatorID string, score int, title string, text string, language string) (string, error) {
 	id, err := utils.GenerateID()
 	if err != nil {
 		return "", err
 	}
 	_, err = dbx.ExecContext(
 		ctx,
-		"INSERT INTO problems (`id`, `creator_id`, `score`, `title`, `text`) VALUES (?, ?, ?, ?, ?)",
+		"INSERT INTO problems (`id`, `creator_id`, `score`, `title`, `text`, `language`) VALUES (?, ?, ?, ?, ?, ?)",
 		id,
 		creatorID,
 		score,
 		title,
 		text,
+		language,
 	)
 	if err != nil {
 		return "", err

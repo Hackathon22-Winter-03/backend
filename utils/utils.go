@@ -1,9 +1,14 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/google/uuid"
+)
+
+var (
+	ErrNotFound error = fmt.Errorf("not found")
 )
 
 func GetEnv(key, defaultVal string) string {
