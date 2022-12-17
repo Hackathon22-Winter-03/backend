@@ -13,7 +13,7 @@ impl Parser {
         }
     }
 
-    pub fn parse(&mut self) -> Result<HashMap<(&str, char), (&str, char, char)>, &str> {
+    pub fn parse<'a>(&mut self) -> Result<HashMap<(&str, char), (&str, char, char)>, &'a str> {
         let mut rules = HashMap::new();
         while self.pos < self.chs.len() {
             if self.chs[self.pos].is_whitespace() {
@@ -22,7 +22,7 @@ impl Parser {
             }
 
             self.consume('(')?;
-            
+
             let cur_state = self.read_str();
 
             self.consume(',')?;
@@ -53,7 +53,7 @@ impl Parser {
         return Ok(rules);
     }
 
-    fn read_char(&mut self) -> Result<char, &str> {
+    fn read_char<'a>(&mut self) -> Result<char, &'a str> {
         if self.pos < self.chs.len() {
             let ch = self.chs[self.pos];
             self.pos += 1;
@@ -63,20 +63,20 @@ impl Parser {
         }
     }
 
-    fn read_str(&mut self) -> &str {
-        let mut s = String::from("");
+    fn read_str<'a>(&mut self) -> &'a str {
+        let mut s = vec![];
         while self.pos < self.chs.len() {
             if self.chs[self.pos] == ',' || self.chs[self.pos] == '(' || self.chs[self.pos] == ')' || self.chs[self.pos] == '\n' {
                 self.pos += 1;
-                return &*s;
+                return s.as_str();
             }
             s.push(self.chs[self.pos]);
             self.pos += 1;
         }
-        return &*s;
+        return s.as_str();
     }
 
-    fn consume(&mut self, ch: char) -> Result<(), &str> {
+    fn consume<'a>(&mut self, ch: char) -> Result<(), &'a str> {
         if self.chs[self.pos] == ch {
             self.pos += 1;
             return Ok(());
@@ -93,7 +93,7 @@ pub struct Turing<'a> {
 }
 
 impl Turing<'_> {
-    pub fn new(code: &str) -> Result<Self, &str> {
+    pub fn new<'a>(code: &str) -> Result<Self, &'a str> {
         match Parser::new(code).parse() {
             Ok(rules) => Ok(Turing {
                 pos: 0,
@@ -104,8 +104,8 @@ impl Turing<'_> {
         }
     }
 
-    pub fn compute(&self, tape: &str) -> Vec<char> {
-        let tape_chars: Vec<char> = tape.chars().collect();
+    pub fn compute(&mut self, tape: &str) -> Vec<char> {
+        let mut tape_chars: Vec<char> = tape.chars().collect();
 
         while self.state != "_" {
             let input = tape_chars[self.pos];
