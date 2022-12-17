@@ -36,16 +36,20 @@ pub extern "C" fn step_execute(code: *const libc::c_char, input: *const libc::c_
     let str_model = cstr_model.to_str().unwrap();
 
     let str_output;
-    match Markov::new(str_code) {
-        Ok(mut markov) => {
-            markov.set_text(str_input);
-            str_output = markov.step().0;
-            CString::new(str_output.into_iter().collect::<String>()).unwrap().into_raw()
-        },
-        Err(msg) => {
-            CString::new(msg.to_string()).unwrap().into_raw()
-        },
+    if str_model == "markov" {
+        match Markov::new(str_code) {
+            Ok(mut markov) => {
+                markov.set_text(str_input);
+                str_output = markov.step().0;
+                return CString::new(str_output.into_iter().collect::<String>()).unwrap().into_raw();
+            },
+            Err(msg) => {
+                return CString::new(msg.to_string()).unwrap().into_raw();
+            },
+        }
     }
+
+    return CString::new(String::from("")).unwrap().into_raw();
 }
 
 fn main() {
