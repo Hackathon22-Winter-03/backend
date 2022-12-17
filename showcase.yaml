@@ -2,7 +2,7 @@ type: runtime
 
 startup: |
   go mod download
-  go build -o main
+  make build
 entrypoint: ./main -d
 https: on
 http_proxy: 3000

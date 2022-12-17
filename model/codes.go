@@ -1,14 +1,14 @@
 package model
 
-/*
-#cgo LDFLAGS: -L../lang -llang
-#include <stdlib.h>
-#include "../lang/simulate.h"
-*/
-import "C"
-
 import (
+	/*
+	   #cgo LDFLAGS: -L../lang -llang
+	   #include <stdlib.h>
+	   #include "../lang/simulate.h"
+	*/
+	"C"
 	"context"
+	"database/sql"
 	"time"
 	"unsafe"
 
@@ -75,6 +75,9 @@ func GetCode(ctx context.Context, problemID string, codeID string) (Code, error)
 		problemID,
 	)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return c, utils.ErrNotFound
+		}
 		return c, err
 	}
 	return c, nil
@@ -119,15 +122,27 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	defer C.free(unsafe.Pointer(cstr_code))
 
 	for _, testcase := range testcases {
-		cstr_input := C.CString(testcase.input)
+		cstr_input := C.CString(testcase.Input)
 		defer C.free(unsafe.Pointer(cstr_input))
-		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.output {
+		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.Output {
 			continue
 		} else {
 			return "WA"
 		}
 	}
 	return "AC"
+}
+
+func StepExecute(ctx context.Context, code string, state string, language string) (string, error) {
+	// Rust FFI
+	cstr_code := C.CString(code)
+	defer C.free(unsafe.Pointer(cstr_code))
+	cstr_state := C.CString(state)
+	defer C.free(unsafe.Pointer(cstr_state))
+	cstr_lang := C.CString(language)
+	defer C.free(unsafe.Pointer(cstr_lang))
+
+	return C.GoString(C.step_execute_markov(cstr_code, cstr_state, cstr_lang)), nil
 }
 
 func ACProblems(ctx context.Context, userID string) ([]string, error) {

@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `testcases`;
 
 CREATE TABLE `users` (
   `id` varchar(36) NOT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `comment` text NOT NULL,
   `score` bigint NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -34,6 +34,7 @@ CREATE TABLE `problems` (
   `score` bigint NOT NULL,
   `title` varchar(64) NOT NULL,
   `text` text NOT NULL,
+  `language` varchar(64) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL,

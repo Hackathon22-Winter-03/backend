@@ -15,21 +15,24 @@ func SetupRouting() (*echo.Echo, error) {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{http.MethodGet, http.MethodPost},
-		AllowHeaders: []string{"Content-Type", "x-master-version", "x-session"},
+		AllowOrigins:     []string{"http://localhost:5173", "http://127.0.0.1:5173", "https://hackathon22-winter-03.trap.jp"},
+		AllowMethods:     []string{http.MethodGet, http.MethodPost},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderSetCookie},
+		AllowCredentials: true,
 	}))
 
-	e.GET("/ping", pingHandler)
-	e.GET("/echo", echoHandler)
-	e.GET("/users", getUsersHandler)
-	e.POST("/users", postUserHandler)
-	e.GET("/users/:userID", getUserHandler)
-	e.GET("/problems", getProblemsHandler)
-	e.GET("/problems/:problemID", getProblemHandler)
-	e.GET("/problems/:problemID/codes", getCodesHandler)
-	e.GET("/problems/:problemID/codes/:codeID", getCodeHandler)
-	e.POST("/problems/:problemID/submit", submitCodeHandler)
+	e.GET("/api/ping", pingHandler)
+	e.GET("/api/echo", echoHandler)
+	e.GET("/api/users", getUsersHandler)
+	e.POST("/api/users", postUserHandler)
+	e.GET("/api/users/:userID", getUserHandler)
+	e.GET("/api/problems", getProblemsHandler)
+	e.POST("/api/problems", tryCreateProblemHandler)
+	e.GET("/api/problems/:problemID", getProblemHandler)
+	e.GET("/api/problems/:problemID/codes", getCodesHandler)
+	e.GET("/api/problems/:problemID/codes/:codeID", getCodeHandler)
+	e.POST("/api/problems/:problemID/submit", submitCodeHandler)
+	e.POST("/api/step", stepExecuteHandler) // code case
 
 	port := utils.GetEnv("PORT", ":3000")
 	err := e.Start(port)
