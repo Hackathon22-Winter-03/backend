@@ -45,12 +45,16 @@ func tryCreateProblemHandler(c echo.Context) error {
 
 // GET /problems/:problemID
 func getProblemHandler(c echo.Context) error {
+	userID := c.FormValue("userID")
+	if userID == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
+	}
 	problemID := c.Param("problemID")
 	if problemID == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "problemID is required")
 	}
 
-	problem, err := model.GetProblem(c.Request().Context(), problemID)
+	problem, err := model.GetProblemByUser(c.Request().Context(), problemID, userID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}

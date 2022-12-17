@@ -102,6 +102,46 @@ func GetProblem(ctx context.Context, problemID string) (ProblemAggregate, error)
 	return problem, nil
 }
 
+func GetProblemByUser(ctx context.Context, problemID string, userID string) (ProblemAggregate, error) {
+	problem := ProblemAggregate{}
+	err := dbx.GetContext(
+		ctx,
+		&problem,
+		"SELECT p.`id`, `creator_id`, u.name as `creator_name`, p.`score`, `title`, `text`, `language`, p.`created_at`, p.`updated_at`, p.`deleted_at` "+
+			"FROM problems as p "+
+			"JOIN users as u ON u.id = p.creator_id "+
+			"WHERE p.`id` = ?",
+		problemID,
+	)
+	if err != nil {
+		return problem, err
+	}
+
+	ac_problems, err := ACProblems(ctx, userID)
+	if err != nil {
+		return problem, err
+	}
+	for _, ac_problemID := range ac_problems {
+		if ac_problemID == problemID {
+			problem.Result = "AC"
+			return problem, nil
+		}
+	}
+
+	wa_problems, err := WAProblems(ctx, userID)
+	if err != nil {
+		return problem, err
+	}
+	for _, wa_problemID := range wa_problems {
+		if wa_problemID == problemID {
+			problem.Result = "WA"
+			return problem, nil
+		}
+	}
+
+	return problem, nil
+}
+
 func TryCreateProblem(ctx context.Context, creatorID string, score int, title string, text string, language string) (string, error) {
 	id, err := utils.GenerateID()
 	if err != nil {
