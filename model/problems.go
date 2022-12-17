@@ -61,8 +61,8 @@ func GetProblemsByUser(ctx context.Context, userID string) ([]ProblemAggregate, 
 	}
 
 	problemsDict := map[string]*ProblemAggregate{}
-	for _, problem := range problems {
-		problemsDict[problem.ID] = &problem
+	for i := range problems {
+		problemsDict[problems[i].ID] = &problems[i]
 	}
 
 	ac_problems, err := ACProblems(ctx, userID)
