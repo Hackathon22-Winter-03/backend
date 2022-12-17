@@ -1,9 +1,17 @@
 package model
 
+/*
+#cgo LDFLAGS: -L../lang -llang
+#include <stdlib.h>
+#include "../lang/simulate.h"
+*/
+import "C"
+
 import (
 	"context"
 	"database/sql"
 	"time"
+	"unsafe"
 
 	"github.com/Hackathon22-Winter-03/backend/utils"
 )
@@ -111,10 +119,18 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	}
 
 	// Rust FFI
-	// for _, testcase := range testcases {
-	// 	if (executeCode(code, testcase.input) == testcase.output) continue
-	// 	else return "WA", nil
-	// }
+	cstr_code := C.CString(code)
+	defer C.free(unsafe.Pointer(cstr_code))
+
+	for _, testcase := range testcases {
+		cstr_input := C.CString(testcase.input)
+		defer C.free(unsafe.Pointer(cstr_input))
+		if C.GoString(C.simulate_markov(cstr_code, cstr_input)) == testcase.output {
+			continue
+		} else {
+			return "WA"
+		}
+	}
 	return "AC"
 }
 
