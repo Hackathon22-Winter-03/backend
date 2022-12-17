@@ -1,5 +1,10 @@
 package model
 
+/*
+#cgo LDFLAGS: -L../lang -llang
+#include <stdlib.h>
+#include "../lang/rustaceanize.h"
+*/
 import "C"
 
 import (
@@ -110,16 +115,18 @@ func executeCode(ctx context.Context, problemID string, code string) string {
 	}
 
 	// Rust FFI
-	code := C.CString("woman:W\nman:M\nMW:\nWM:\n")
-	input := C.CString("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman")
-	defer C.free(unsafe.Pointer(code))
-	defer C.free(unsafe.Pointer(input))
+	cstr_code := C.CString(code)
+	defer C.free(unsafe.Pointer(cstr_code))
 
-	output := C.GoString(C.rustaceanize(code, input))
-	// for _, testcase := range testcases {
-	// 	if (executeCode(code, testcase.input) == testcase.output) continue
-	// 	else return "WA", nil
-	// }
+	for _, testcase := range testcases {
+		cstr_input := C.CString(testcase.input)
+		defer C.free(unsafe.Pointer(cstr_input))
+		if C.GoString(C.rustaceanize(cstr_code, cstr_input)) == testcase.output {
+			continue
+		} else {
+			return "WA"
+		}
+	}
 	return "AC"
 }
 
