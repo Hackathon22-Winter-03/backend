@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Hackathon22-Winter-03/backend/model"
@@ -12,6 +13,7 @@ import (
 func getProblemsHandler(c echo.Context) error {
 	userID, err := c.Cookie("userID")
 	if err != nil || userID.Value == "" {
+		fmt.Println(err, userID)
 		return echo.NewHTTPError(http.StatusBadRequest, "userID is required")
 	}
 
