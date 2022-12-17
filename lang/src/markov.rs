@@ -73,7 +73,6 @@ impl Markov {
     pub fn run(&mut self) -> Vec<char> {
         loop {
             let (next_text, is_terminate) = self.step();
-            println!("{:?} {}", next_text, is_terminate);
             if is_terminate {
                 return next_text;
             } else {
