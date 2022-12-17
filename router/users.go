@@ -1,6 +1,7 @@
 package router
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/Hackathon22-Winter-03/backend/model"
@@ -25,10 +26,13 @@ func getUserHandler(c echo.Context) error {
 	}
 
 	user, err := model.GetUser(c.Request().Context(), userID)
-
+	if err == sql.ErrNoRows {
+		return echo.NewHTTPError(http.StatusNotFound, "user not found")
+	}
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
+
 	return c.JSON(http.StatusOK, user)
 }
 
