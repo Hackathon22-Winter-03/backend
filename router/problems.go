@@ -37,7 +37,7 @@ func tryCreateProblemHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	id, err := model.TryCreateProblem(c.Request().Context(), userID.Value, problem.Score, problem.Title, problem.Text)
+	id, err := model.TryCreateProblem(c.Request().Context(), userID.Value, problem.Score, problem.Title, problem.Text, problem.Language)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
