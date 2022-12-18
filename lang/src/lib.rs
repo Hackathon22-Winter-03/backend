@@ -42,22 +42,22 @@ pub extern "C" fn step_execute(
     let str_input = cstr_input.to_str().unwrap();
     let str_model = cstr_model.to_str().unwrap();
 
-    let str_output;
-    println!("{} {} {}", str_code, str_input, str_model);
     if str_model == "markov" {
-        println!("markov desu");
         match Markov::new(str_code) {
             Ok(mut markov) => {
-                println!("ok");
                 markov.set_text(str_input);
-                str_output = markov.step().0;
-                println!("{:?}", str_output);
-                return CString::new(str_output.into_iter().collect::<String>())
-                    .unwrap()
-                    .into_raw();
+                let (str_output, is_terminated, is_ended) = markov.step();
+                if is_ended {
+                    return CString::new(str_output.into_iter().collect::<String>() + "T")
+                        .unwrap()
+                        .into_raw();
+                } else {
+                    return CString::new(str_output.into_iter().collect::<String>() + "F")
+                        .unwrap()
+                        .into_raw();
+                }
             }
             Err(msg) => {
-                println!("err");
                 return CString::new(msg.to_string()).unwrap().into_raw();
             }
         }

@@ -147,5 +147,15 @@ func stepExecuteHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(http.StatusOK, result)
+	type Result struct {
+		Output  string `json:"output"`
+		IsEnded bool   `json:"isEnded"`
+	}
+	if result[len(result)-1] == 'T' {
+		res := Result{Output: result[:len(result)-1], IsEnded: true}
+		return c.JSON(http.StatusOK, res)
+	} else {
+		res := Result{Output: result[:len(result)-1], IsEnded: false}
+		return c.JSON(http.StatusOK, res)
+	}
 }

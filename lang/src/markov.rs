@@ -23,7 +23,10 @@ pub struct Markov {
 impl Markov {
     pub fn new(code: &str) -> Result<Self, &str> {
         match Markov::parse(code) {
-            Ok(rules) => Ok(Markov { rules: rules, text: Vec::<char>::new() }),
+            Ok(rules) => Ok(Markov {
+                rules: rules,
+                text: Vec::<char>::new(),
+            }),
             Err(msg) => Err(msg),
         }
     }
@@ -36,20 +39,20 @@ impl Markov {
             let mut before = vec![];
             let mut after = vec![];
             let is_terminate;
-            
+
             while i < code_chars.len() && code_chars[i] != ':' {
                 before.push(code_chars[i]);
                 i += 1;
             }
 
             if i < code_chars.len() && code_chars[i] == ':' {
-                if i + 1 < code_chars.len() && code_chars[i+1] == ':' {
+                if i + 1 < code_chars.len() && code_chars[i + 1] == ':' {
                     is_terminate = true;
                     i += 2;
                 } else {
                     is_terminate = false;
                     i += 1;
-                }   
+                }
             } else {
                 return Err("Syntax Error");
             }
@@ -59,7 +62,11 @@ impl Markov {
                 i += 1;
             }
 
-            rules.push(Rule { before, after, is_terminate });
+            rules.push(Rule {
+                before,
+                after,
+                is_terminate,
+            });
 
             i += 1;
         }
@@ -72,7 +79,7 @@ impl Markov {
 
     pub fn run(&mut self) -> Vec<char> {
         loop {
-            let (next_text, is_terminate) = self.step();
+            let (next_text, is_terminate, is_ended) = self.step();
             if is_terminate {
                 return next_text;
             } else {
@@ -81,7 +88,8 @@ impl Markov {
         }
     }
 
-    pub fn step(&mut self) -> (Vec<char>, bool) {
+    pub fn step(&mut self) -> (Vec<char>, bool, bool) {
+        let mut flag: bool = false;
         for rule in self.rules.clone() {
             if self.text.len() < rule.before.len() {
                 continue;
@@ -97,6 +105,7 @@ impl Markov {
                 }
 
                 if pattern_match {
+                    flag = true;
                     let mut next_text: Vec<char> = vec![];
                     for j in 0..i {
                         next_text.push(self.text[j]);
@@ -111,6 +120,7 @@ impl Markov {
                 }
             }
         }
-        return (self.text.clone(), true);
+
+        return (self.text.clone(), true, !flag);
     }
 }
