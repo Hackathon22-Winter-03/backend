@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Hackathon22-Winter-03/backend/model"
@@ -134,6 +135,7 @@ func stepExecuteHandler(c echo.Context) error {
 	if problemID == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "problemID is required")
 	}
+	fmt.Println(code, state, problemID)
 
 	problem, err := model.GetProblem(c.Request().Context(), problemID)
 	if err != nil {
