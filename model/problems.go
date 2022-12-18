@@ -66,20 +66,20 @@ func GetProblemsByUser(ctx context.Context, userID string) ([]ProblemAggregate, 
 		problemsDict[problems[i].ID] = &problems[i]
 	}
 
-	ac_problems, err := ACProblems(ctx, userID)
-	if err != nil {
-		return problems, err
-	}
-	for _, problem := range ac_problems {
-		problemsDict[problem].Result = "AC"
-	}
-
 	wa_problems, err := WAProblems(ctx, userID)
 	if err != nil {
 		return problems, err
 	}
 	for _, problem := range wa_problems {
 		problemsDict[problem].Result = "WA"
+	}
+
+	ac_problems, err := ACProblems(ctx, userID)
+	if err != nil {
+		return problems, err
+	}
+	for _, problem := range ac_problems {
+		problemsDict[problem].Result = "AC"
 	}
 
 	return problems, nil
@@ -117,17 +117,6 @@ func GetProblemByUser(ctx context.Context, problemID string, userID string) (Pro
 		return problem, err
 	}
 
-	ac_problems, err := ACProblems(ctx, userID)
-	if err != nil {
-		return problem, err
-	}
-	for _, ac_problemID := range ac_problems {
-		if ac_problemID == problemID {
-			problem.Result = "AC"
-			return problem, nil
-		}
-	}
-
 	wa_problems, err := WAProblems(ctx, userID)
 	if err != nil {
 		return problem, err
@@ -135,6 +124,17 @@ func GetProblemByUser(ctx context.Context, problemID string, userID string) (Pro
 	for _, wa_problemID := range wa_problems {
 		if wa_problemID == problemID {
 			problem.Result = "WA"
+			return problem, nil
+		}
+	}
+
+	ac_problems, err := ACProblems(ctx, userID)
+	if err != nil {
+		return problem, err
+	}
+	for _, ac_problemID := range ac_problems {
+		if ac_problemID == problemID {
+			problem.Result = "AC"
 			return problem, nil
 		}
 	}
