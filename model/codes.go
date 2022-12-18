@@ -103,6 +103,27 @@ func SubmitCode(ctx context.Context, userID string, problemID string, code strin
 	if err != nil {
 		return "IE", err
 	}
+
+	score := 0
+	err = dbx.GetContext(
+		ctx,
+		&score,
+		"SELECT `score` FROM problems WHERE `id` = ?",
+		problemID,
+	)
+	if err != nil {
+		return "IE", err
+	}
+
+	_, err = dbx.ExecContext(
+		ctx,
+		"UPDATE users SET `score` = `score` + ? WHERE `id` = ?",
+		score,
+		userID,
+	)
+	if err != nil {
+		return "IE", err
+	}
 	return result, nil
 }
 
