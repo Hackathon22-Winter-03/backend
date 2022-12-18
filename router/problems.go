@@ -129,13 +129,7 @@ func submitCodeHandler(c echo.Context) error {
 // POST /step
 func stepExecuteHandler(c echo.Context) error {
 	code := c.FormValue("code")
-	if code == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "code is required")
-	}
 	state := c.FormValue("state")
-	if state == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "state is required")
-	}
 	problemID := c.FormValue("problemID")
 	if problemID == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "problemID is required")
