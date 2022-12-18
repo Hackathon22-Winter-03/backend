@@ -119,12 +119,16 @@ func submitCodeHandler(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "code is required")
 	}
 
-	_, err := model.SubmitCode(c.Request().Context(), userID, problemID, code)
+	result, err := model.SubmitCode(c.Request().Context(), userID, problemID, code)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
+	type Result struct {
+		Result string `json:"result"`
+	}
+	resultStruct := Result{Result: result}
 
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, resultStruct)
 }
 
 // POST /step
