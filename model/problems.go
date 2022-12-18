@@ -10,10 +10,10 @@ import (
 type Problem struct {
 	ID        string     `json:"id" db:"id"`
 	CreatorID string     `json:"creatorId" db:"creator_id"`
-	Score     int        `json:"score" db:"score"`
-	Title     string     `json:"title" db:"title"`
-	Text      string     `json:"text" db:"text"`
-	Language  string     `json:"language" db:"language"`
+	Score     int        `json:"score" db:"score" form:"score"`
+	Title     string     `json:"title" db:"title" form:"title"`
+	Text      string     `json:"text" db:"text" form:"text"`
+	Language  string     `json:"language" db:"language" form:"language"`
 	CreatedAt time.Time  `json:"createdAt" db:"created_at"`
 	UpdatedAt time.Time  `json:"updatedAt" db:"updated_at"`
 	DeletedAt *time.Time `json:"deletedAt" db:"deleted_at"`
