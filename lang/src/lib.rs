@@ -46,8 +46,8 @@ pub extern "C" fn step_execute(
         match Markov::new(str_code) {
             Ok(mut markov) => {
                 markov.set_text(str_input);
-                let (str_output, is_terminated, is_ended) = markov.step();
-                if is_ended {
+                let (str_output, is_terminated) = markov.step();
+                if is_terminated {
                     return CString::new(str_output.into_iter().collect::<String>() + "T")
                         .unwrap()
                         .into_raw();

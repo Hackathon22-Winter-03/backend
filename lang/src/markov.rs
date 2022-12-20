@@ -79,7 +79,7 @@ impl Markov {
 
     pub fn run(&mut self) -> Vec<char> {
         loop {
-            let (next_text, is_terminate, is_ended) = self.step();
+            let (next_text, is_terminate) = self.step();
             if is_terminate {
                 return next_text;
             } else {
@@ -88,7 +88,7 @@ impl Markov {
         }
     }
 
-    pub fn step(&mut self) -> (Vec<char>, bool, bool) {
+    pub fn step(&mut self) -> (Vec<char>, bool) {
         for rule in self.rules.clone() {
             if self.text.len() < rule.before.len() {
                 continue;
@@ -114,11 +114,11 @@ impl Markov {
                     for j in i + rule.before.len()..self.text.len() {
                         next_text.push(self.text[j]);
                     }
-                    return (next_text, rule.is_terminate, false);
+                    return (next_text, rule.is_terminate);
                 }
             }
         }
 
-        return (self.text.clone(), true, true);
+        return (self.text.clone(), true);
     }
 }
