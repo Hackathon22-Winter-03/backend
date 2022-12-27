@@ -73,17 +73,4 @@ pub extern "C" fn step_execute(
     return CString::new(String::from("")).unwrap().into_raw();
 }
 
-<<<<<<< HEAD
-fn main() {
-    // if let Ok(mut markov) = Markov::new("woman:W\n\nman:M\nMW:\nWM:\n") {
-    //     markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
-    //     println!("{:?}", markov.run());
-    // }
-    // if let Ok(mut markov) = Markov::new("s0:0s\ns1:1s\n0s::\n:s") {
-    //     markov.set_text("110011001010");
-    //     println!("{:?}", markov.run());
-    // }
-}
-=======
 fn main() {}
->>>>>>> 288e43e3bbe399e6959708f0a40df5e87f6b5716
