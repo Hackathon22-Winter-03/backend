@@ -42,11 +42,17 @@ pub extern "C" fn step_execute(
     let str_input = cstr_input.to_str().unwrap();
     let str_model = cstr_model.to_str().unwrap();
 
-    if str_model == "markov" {
-        match Markov::new(str_code) {
+    println!("{:?} {:?} {:?}", str_code, str_input, str_model);
+
+    match str_model {
+        "markov" => match Markov::new(str_code) {
             Ok(mut markov) => {
                 markov.set_text(str_input);
                 let (str_output, is_terminated) = markov.step();
+<<<<<<< HEAD
+=======
+                println!("{:?} {:?}", str_output, is_terminated);
+>>>>>>> 288e43e3bbe399e6959708f0a40df5e87f6b5716
                 if is_terminated {
                     return CString::new(str_output.into_iter().collect::<String>() + "T")
                         .unwrap()
@@ -60,12 +66,14 @@ pub extern "C" fn step_execute(
             Err(msg) => {
                 return CString::new(msg.to_string()).unwrap().into_raw();
             }
-        }
-    }
+        },
+        _ => {}
+    };
 
     return CString::new(String::from("")).unwrap().into_raw();
 }
 
+<<<<<<< HEAD
 fn main() {
     // if let Ok(mut markov) = Markov::new("woman:W\n\nman:M\nMW:\nWM:\n") {
     //     markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
@@ -76,3 +84,6 @@ fn main() {
     //     println!("{:?}", markov.run());
     // }
 }
+=======
+fn main() {}
+>>>>>>> 288e43e3bbe399e6959708f0a40df5e87f6b5716
