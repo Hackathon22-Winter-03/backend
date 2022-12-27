@@ -67,7 +67,7 @@ pub extern "C" fn step_execute(
 }
 
 fn main() {
-    // if let Ok(mut markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
+    // if let Ok(mut markov) = Markov::new("woman:W\n\nman:M\nMW:\nWM:\n") {
     //     markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
     //     println!("{:?}", markov.run());
     // }
@@ -75,5 +75,4 @@ fn main() {
     //     markov.set_text("110011001010");
     //     println!("{:?}", markov.run());
     // }
-    
 }

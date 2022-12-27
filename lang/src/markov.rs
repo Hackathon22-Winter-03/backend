@@ -62,13 +62,15 @@ impl Markov {
                 i += 1;
             }
 
+            while i < code_chars.len() && code_chars[i] == '\n' {
+                i += 1;
+            }
+
             rules.push(Rule {
                 before,
                 after,
                 is_terminate,
             });
-
-            i += 1;
         }
         return Ok(rules);
     }
