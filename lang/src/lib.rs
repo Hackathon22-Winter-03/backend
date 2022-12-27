@@ -42,11 +42,14 @@ pub extern "C" fn step_execute(
     let str_input = cstr_input.to_str().unwrap();
     let str_model = cstr_model.to_str().unwrap();
 
+    println!("{:?} {:?} {:?}", str_code, str_input, str_model);
+
     match str_model {
         "markov" => match Markov::new(str_code) {
             Ok(mut markov) => {
                 markov.set_text(str_input);
                 let (str_output, is_terminated) = markov.step();
+                println!("{:?} {:?}", str_output, is_terminated);
                 if is_terminated {
                     return CString::new(str_output.into_iter().collect::<String>() + "T")
                         .unwrap()

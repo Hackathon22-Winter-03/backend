@@ -90,6 +90,7 @@ impl Markov {
 
     pub fn step(&mut self) -> (Vec<char>, bool) {
         for rule in self.rules.clone() {
+            println!("{:?} {:?} {:?}", rule.before, rule.after, rule.is_terminate);
             if self.text.len() < rule.before.len() {
                 continue;
             }
@@ -127,6 +128,14 @@ impl Markov {
 fn markov_man_woman() {
     if let Ok(mut markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
         markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
+        println!("{:?}", markov.run());
+    }
+}
+
+#[test]
+fn markov_divide_2() {
+    if let Ok(mut markov) = Markov::new("s0:0s\ns1:1s\n0s::\n:s\n") {
+        markov.set_text("1001010101010111010");
         println!("{:?}", markov.run());
     }
 }
