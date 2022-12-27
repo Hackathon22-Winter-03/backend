@@ -79,7 +79,7 @@ impl Markov {
 
     pub fn run(&mut self) -> Vec<char> {
         loop {
-            let (next_text, is_terminate, is_ended) = self.step();
+            let (next_text, is_terminate) = self.step();
             if is_terminate {
                 return next_text;
             } else {
@@ -88,16 +88,16 @@ impl Markov {
         }
     }
 
-    pub fn step(&mut self) -> (Vec<char>, bool, bool) {
+    pub fn step(&mut self) -> (Vec<char>, bool) {
         for rule in self.rules.clone() {
             if self.text.len() < rule.before.len() {
                 continue;
             }
 
-            for i in (0 as usize)..((self.text.len() - rule.before.len() + 1) as usize) {
+            for rule_start in (0 as usize)..((self.text.len() - rule.before.len() + 1) as usize) {
                 let mut pattern_match = true;
-                for j in (0 as usize)..(rule.before.len() as usize) {
-                    if self.text[i + j] != rule.before[j] {
+                for i in (0 as usize)..(rule.before.len() as usize) {
+                    if self.text[rule_start + i] != rule.before[i] {
                         pattern_match = false;
                         break;
                     }
@@ -105,20 +105,28 @@ impl Markov {
 
                 if pattern_match {
                     let mut next_text: Vec<char> = vec![];
-                    for j in 0..i {
-                        next_text.push(self.text[j]);
+                    for i in 0..rule_start {
+                        next_text.push(self.text[i]);
                     }
                     for c in rule.after {
                         next_text.push(c);
                     }
-                    for j in i + rule.before.len()..self.text.len() {
-                        next_text.push(self.text[j]);
+                    for i in rule_start + rule.before.len()..self.text.len() {
+                        next_text.push(self.text[i]);
                     }
-                    return (next_text, rule.is_terminate, false);
+                    return (next_text, rule.is_terminate);
                 }
             }
         }
 
-        return (self.text.clone(), true, true);
+        return (self.text.clone(), true);
+    }
+}
+
+#[test]
+fn markov_man_woman() {
+    if let Ok(mut markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
+        markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
+        println!("{:?}", markov.run());
     }
 }

@@ -42,12 +42,12 @@ pub extern "C" fn step_execute(
     let str_input = cstr_input.to_str().unwrap();
     let str_model = cstr_model.to_str().unwrap();
 
-    if str_model == "markov" {
-        match Markov::new(str_code) {
+    match str_model {
+        "markov" => match Markov::new(str_code) {
             Ok(mut markov) => {
                 markov.set_text(str_input);
-                let (str_output, is_terminated, is_ended) = markov.step();
-                if is_ended {
+                let (str_output, is_terminated) = markov.step();
+                if is_terminated {
                     return CString::new(str_output.into_iter().collect::<String>() + "T")
                         .unwrap()
                         .into_raw();
@@ -60,15 +60,11 @@ pub extern "C" fn step_execute(
             Err(msg) => {
                 return CString::new(msg.to_string()).unwrap().into_raw();
             }
-        }
-    }
+        },
+        _ => {}
+    };
 
     return CString::new(String::from("")).unwrap().into_raw();
 }
 
-fn main() {
-    //     if let Ok(mut markov) = Markov::new("woman:W\nman:M\nMW:\nWM:\n") {
-    //         markov.set_text("manmanwomanwomanmanwomanwomanmanwomanmanmanwoman");
-    //         println!("{:?}", markov.run());
-    //     }
-}
+fn main() {}
