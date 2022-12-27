@@ -123,8 +123,6 @@ impl Markov {
         }
 
         return (self.text.clone(), true);
-<<<<<<< HEAD
-=======
     }
 }
 
@@ -141,6 +139,5 @@ fn markov_divide_2() {
     if let Ok(mut markov) = Markov::new("s0:0s\ns1:1s\n0s::\n:s\n") {
         markov.set_text("1001010101010111010");
         println!("{:?}", markov.run());
->>>>>>> 288e43e3bbe399e6959708f0a40df5e87f6b5716
     }
 }

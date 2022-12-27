@@ -49,10 +49,6 @@ pub extern "C" fn step_execute(
             Ok(mut markov) => {
                 markov.set_text(str_input);
                 let (str_output, is_terminated) = markov.step();
-<<<<<<< HEAD
-=======
-                println!("{:?} {:?}", str_output, is_terminated);
->>>>>>> 288e43e3bbe399e6959708f0a40df5e87f6b5716
                 if is_terminated {
                     return CString::new(str_output.into_iter().collect::<String>() + "T")
                         .unwrap()
